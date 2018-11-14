@@ -8,7 +8,7 @@ import RNFS from 'react-native-fs';
 
 const RNAppUpdate = NativeModules.RNAppUpdate;
 
-const jobId = -1;
+let jobId = -1;
 
 class AppUpdate {
   constructor(options) {
@@ -16,7 +16,7 @@ class AppUpdate {
   }
 
   GET(url, success, error) {
-    fetch(url)
+    fetch(url, {cache: "no-cache"})
       .then((response) => response.json())
       .then((json) => {
         success && success(json);
