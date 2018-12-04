@@ -39,7 +39,7 @@ class AppUpdate {
 
   getApkVersionSuccess(remote) {
     console.log("getApkVersionSuccess", remote);
-    if (RNAppUpdate.versionName !== remote.versionName) {
+    if (RNAppUpdate.versionName < remote.versionName) {
       if (remote.forceUpdate) {
         if(this.options.forceUpdateApp) {
           this.options.forceUpdateApp();
