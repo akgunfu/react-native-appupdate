@@ -1,9 +1,11 @@
 package com.parryworld.rnappupdate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.util.Log;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -21,6 +23,7 @@ public class RNAppUpdate extends ReactContextBaseJavaModule {
 
     private String versionName = "1.0.0";
     private int versionCode = 1;
+    private ReactApplicationContext reactNativeContext = null;
 
     public RNAppUpdate(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -29,6 +32,7 @@ public class RNAppUpdate extends ReactContextBaseJavaModule {
             pInfo = reactContext.getPackageManager().getPackageInfo(reactContext.getPackageName(), 0);
             versionName = pInfo.versionName;
             versionCode = pInfo.versionCode;
+            reactNativeContext = reactContext;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -48,16 +52,11 @@ public class RNAppUpdate extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void installApk(String file) {
-        String cmd = "chmod 777 " + file;
+    public void installApk(String path) {
         try {
-            Runtime.getRuntime().exec(cmd);
-        } catch (Exception e) {
-            e.printStackTrace();
+            ApkInstaller.installApplication(getCurrentActivity(), path);
+        } catch(Exception e){
+            Log.e("APK Install Error", e.toString());
         }
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setDataAndType(Uri.parse("file://" + file), "application/vnd.android.package-archive");
-        getCurrentActivity().startActivity(intent);
     }
 }
