@@ -69,8 +69,11 @@ class AppUpdate {
     const progressDivider = 1;
     const downloadDestPath = `${RNFS.DocumentDirectoryPath}/NewApp.apk`;
 
+    const remoteUrl = remote.apkUrl || '';
+    const url = this.options.useHttps ? remoteUrl.replace('http', 'https') : remoteUrl;
+    console.log("used url", url);
     const ret = RNFS.downloadFile({
-      fromUrl: remote.apkUrl,
+      fromUrl: url,
       toFile: downloadDestPath,
       begin,
       progress,
